@@ -9,18 +9,24 @@
       text-align: center;
       font-family: Arial, sans-serif;
     }
-    canvas {
-      margin: 20px;
+    .wheel-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
     }
-    #output {
-      margin-top: 20px;
+    .wheel-block {
+      text-align: center;
+    }
+    canvas {
+      margin: 10px auto;
     }
     .output-box {
       margin: 5px;
       padding: 10px;
       border: 1px solid #ccc;
-      display: inline-block;
       width: 160px;
+      display: inline-block;
     }
     .spin-button {
       margin: 10px;
@@ -31,23 +37,25 @@
 </head>
 <body>
   <h2>Triple Art Inspiration Spinner</h2>
-  <div>
-    <canvas id="canvas1" width="300" height="300"></canvas>
-    <br />
-    <button class="spin-button" onclick="spinWheel(0)">Spin Environment</button>
-    <div class="output-box" id="out1">Environment</div>
-  </div>
-  <div>
-    <canvas id="canvas2" width="300" height="300"></canvas>
-    <br />
-    <button class="spin-button" onclick="spinWheel(1)">Spin Character</button>
-    <div class="output-box" id="out2">Character</div>
-  </div>
-  <div>
-    <canvas id="canvas3" width="300" height="300"></canvas>
-    <br />
-    <button class="spin-button" onclick="spinWheel(2)">Spin Outfit</button>
-    <div class="output-box" id="out3">Outfit</div>
+  <div class="wheel-container">
+    <div class="wheel-block">
+      <canvas id="canvas1" width="300" height="300"></canvas>
+      <br />
+      <button class="spin-button" onclick="spinWheel(0)">Spin Environment</button>
+      <div class="output-box" id="out1">Environment</div>
+    </div>
+    <div class="wheel-block">
+      <canvas id="canvas2" width="300" height="300"></canvas>
+      <br />
+      <button class="spin-button" onclick="spinWheel(1)">Spin Character</button>
+      <div class="output-box" id="out2">Character</div>
+    </div>
+    <div class="wheel-block">
+      <canvas id="canvas3" width="300" height="300"></canvas>
+      <br />
+      <button class="spin-button" onclick="spinWheel(2)">Spin Outfit</button>
+      <div class="output-box" id="out3">Outfit</div>
+    </div>
   </div>
 
   <script>
