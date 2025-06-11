@@ -58,6 +58,8 @@
     </div>
   </div>
 
+  <button class="spin-button" onclick="spinAll()">🔄 Spin All</button>
+
   <script>
     const wheels = [
       {
@@ -157,6 +159,12 @@
       }
 
       requestAnimationFrame(animate);
+    }
+
+    function spinAll() {
+      spinWheel(0);
+      setTimeout(() => spinWheel(1), 200);
+      setTimeout(() => spinWheel(2), 400);
     }
   </script>
 </body>
