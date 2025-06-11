@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Art Inspiration Triple Spinner</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    canvas {
+      margin: 20px;
+    }
+    #output {
+      margin-top: 20px;
+    }
+    .output-box {
+      margin: 5px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      display: inline-block;
+      width: 160px;
+    }
+    .spin-button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Triple Art Inspiration Spinner</h2>
+  <div>
+    <canvas id="canvas1" width="300" height="300"></canvas>
+    <br />
+    <button class="spin-button" onclick="spinWheel(0)">Spin Environment</button>
+    <div class="output-box" id="out1">Environment</div>
+  </div>
+  <div>
+    <canvas id="canvas2" width="300" height="300"></canvas>
+    <br />
+    <button class="spin-button" onclick="spinWheel(1)">Spin Character</button>
+    <div class="output-box" id="out2">Character</div>
+  </div>
+  <div>
+    <canvas id="canvas3" width="300" height="300"></canvas>
+    <br />
+    <button class="spin-button" onclick="spinWheel(2)">Spin Outfit</button>
+    <div class="output-box" id="out3">Outfit</div>
+  </div>
+
+  <script>
+    const wheels = [
+      {
+        canvas: document.getElementById("canvas1"),
+        ctx: null,
+        segments: ["Ocean", "Desert", "Space", "Jungle", "City", "Mountain", "Sky"],
+        colors: ["#2196F3", "#FFC107", "#9C27B0", "#4CAF50", "#FF5722", "#795548", "#03A9F4"],
+        angle: 0,
+        outputId: "out1"
+      },
+      {
+        canvas: document.getElementById("canvas2"),
+        ctx: null,
+        segments: ["Mammal", "Insect", "Marine Creature", "Reptile", "Bird", "Robot", "Alien"],
+        colors: ["#FF9800", "#8BC34A", "#00BCD4", "#CDDC39", "#E91E63", "#607D8B", "#3F51B5"],
+        angle: 0,
+        outputId: "out2"
+      },
+      {
+        canvas: document.getElementById("canvas3"),
+        ctx: null,
+        segments: ["Greek Armor", "Medieval Armor", "Robotic Suit", "Biosynthetic", "Casual Wear", "Explorer Gear", "Stealth Suit"],
+        colors: ["#B71C1C", "#4E342E", "#263238", "#33691E", "#F5F5F5", "#6A1B9A", "#212121"],
+        angle: 0,
+        outputId: "out3"
+      }
+    ];
+
+    wheels.forEach(wheel => {
+      wheel.ctx = wheel.canvas.getContext("2d");
+      drawWheel(wheel);
+    });
+
+    function drawWheel(wheel) {
+      const ctx = wheel.ctx;
+      const centerX = wheel.canvas.width / 2;
+      const centerY = wheel.canvas.height / 2;
+      const radius = 120;
+      const anglePerSegment = (2 * Math.PI) / wheel.segments.length;
+
+      ctx.clearRect(0, 0, wheel.canvas.width, wheel.canvas.height);
+
+      for (let i = 0; i < wheel.segments.length; i++) {
+        const angle = anglePerSegment * i;
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, angle, angle + anglePerSegment);
+        ctx.fillStyle = wheel.colors[i];
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(angle + anglePerSegment / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#000";
+        ctx.font = "14px Arial";
+        ctx.fillText(wheel.segments[i], radius - 10, 5);
+        ctx.restore();
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(centerX, centerY - radius);
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+
+    function spinWheel(index) {
+      const wheel = wheels[index];
+      const spinAngle = Math.random() * 360 + 720;
+      const spinTime = 2000;
+      const anglePerSegment = (2 * Math.PI) / wheel.segments.length;
+      const start = performance.now();
+      const originalAngle = wheel.angle;
+
+      function animate(time) {
+        const progress = Math.min((time - start) / spinTime, 1);
+        const easing = 1 - Math.pow(1 - progress, 3);
+        wheel.angle = originalAngle + easing * (spinAngle * Math.PI / 180);
+
+        wheel.ctx.save();
+        wheel.ctx.clearRect(0, 0, wheel.canvas.width, wheel.canvas.height);
+        wheel.ctx.translate(wheel.canvas.width / 2, wheel.canvas.height / 2);
+        wheel.ctx.rotate(wheel.angle);
+        wheel.ctx.translate(-wheel.canvas.width / 2, -wheel.canvas.height / 2);
+        drawWheel(wheel);
+        wheel.ctx.restore();
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          const selectedIndex = Math.floor((wheel.segments.length - ((wheel.angle / anglePerSegment) % wheel.segments.length)) % wheel.segments.length);
+          document.getElementById(wheel.outputId).textContent = wheel.segments[selectedIndex];
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+  </script>
+</body>
+</html>
